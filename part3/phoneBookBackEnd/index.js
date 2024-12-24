@@ -70,6 +70,11 @@ app.delete('/api/persons/:id', (req, res) => {
   res.status(204).end()
 })
 
+
+const generateId = () => {
+  const maxId = persons.length > 0 ? Math.max(...persons.map(p => Number(p.id))) : 0;
+  return String(maxId + 1)
+}
 // add new phone book entries 
 app.post('/api/persons/', (req, res) => {
   const body = req.body;
@@ -84,12 +89,11 @@ app.post('/api/persons/', (req, res) => {
   const person = {
     name: body.name,
     number: body.number,
-    id: String(Math.floor(Math.random() * 10000))
+    id: generateId()
   }
 
   persons = persons.concat(person)
-  res.send(persons)
-  res.status(201)
+  res.status(201).json(person)
 })
 
 

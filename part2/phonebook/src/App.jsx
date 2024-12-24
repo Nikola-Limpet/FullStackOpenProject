@@ -26,7 +26,6 @@ const App = () => {
     const newPersonObject = {
       name: newName,
       number: number,
-      id: `${persons.length + 1}`
     }
 
     if (newPersonObject.name.trim() === "" || newPersonObject.number.trim() === "") {
@@ -39,7 +38,13 @@ const App = () => {
       return
     }
     personService.create(newPersonObject)
-      .then(data => setPersons(persons.concat(data)))
+      .then(data => {
+        setPersons(persons.concat(data))
+        setNotifyMesssage({
+          msg: `Added ${newPersonObject.name} successfully!`,
+          status: 'success'
+        })
+      })
       .catch(err => {
         setNotifyMesssage({
           msg: `The error occure check the please check the console ${err}`,
