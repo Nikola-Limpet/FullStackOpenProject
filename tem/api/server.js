@@ -1,77 +1,26 @@
 const express = require('express');
 const cors = require('cors')
 const app = express();
-const port = process.env.PORT || 3001;
+require('dotenv').config()
 
 app.use(express.json());
 app.use(express.static('dist'))
 app.use(cors())
 
-let notes = [
-  {
-    "id": "1",
-    "content": "HTML is easy",
-    "important": true
-  },
-  {
-    "id": "2",
-    "content": "Browser can execute only JavaScript",
-    "important": false
-  },
-  {
-    "id": "3",
-    "content": "GET and POST are the most important methods of HTTP protocol",
-    "important": true
-  },
-  {
-    "id": "4",
-    "content": "Hi",
-    "important": true
-  },
-  {
-    "id": "5",
-    "content": "hi",
-    "important": true
-  },
-  {
-    "id": "6",
-    "content": "hi",
-    "important": true
-  },
-  {
-    "id": "7",
-    "content": "hi",
-    "important": true
-  },
-  {
-    "id": "8",
-    "content": "hi",
-    "important": true
-  },
-  {
-    "id": "9",
-    "content": "sdad",
-    "important": false
-  },
-  {
-    "id": "10",
-    "content": "sdada",
-    "important": true
-  },
-];
+
+const Note = require('./models/note')
 
 app.get('/', (req, res) => { 
   res.send('Hello World');
 });
 
-app.get('/api/notes', (req, res) => {
-  res.json(notes);
-});
+app.get('/api/notes', (request, response) => {
+  Note.find({}).then(notes => {
+    response.json(notes)
+  })
+})
 
-const generateId = () => {
-  const maxId = notes.length > 0 ? Math.max(...notes.map(n => Number(n.id))) : 0;
-  return String(maxId + 1)
-}
+
 app.post('/api/notes', (req, res) => {
   const body = req.body;
   if(!body.content) {
@@ -79,24 +28,22 @@ app.post('/api/notes', (req, res) => {
       error: 'messing content'
     })
   }
-  const note = {
+  const note = new Note({
     content: body.content,
-    important: Boolean(body.important) || false,
-    id: generateId(),
-  }
-  notes = notes.concat(note)
-  res.json(note)
-});
+    important: body.important || false,
+  })
+  note.save().then(savedNote => {
+    res.json(savedNote)
+  })
+})
+  
 // get a single note by id
 app.get('/api/notes/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const note = notes.find(note => note.id === id);
-  
-  if (note) {
-    res.json(note);
-  } else {
-    res.status(404).end();
-  }
+  // const id = Number(req.params.id);
+  // const note = notes.find(note => note.id === id);
+  Note.findById(req.params.id).then(note => {
+    res.json(note)
+  })
 });
 
 // delete a note 
@@ -106,6 +53,8 @@ app.delete('/api/notes/:id', (req,res) => {
 
   res.json(notes)
 })
+
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
