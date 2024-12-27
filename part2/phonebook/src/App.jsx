@@ -33,36 +33,53 @@ const App = () => {
       return
     }
 
-    if (persons.some(person => person.name === newPersonObject.name)) {
-      alert(`${newPersonObject.name} is already added to the phonebook`)
-      return
-    }
-    personService.create(newPersonObject)
-      .then(data => {
-        setPersons(persons.concat(data))
-        setNotifyMesssage({
-          msg: `Added ${newPersonObject.name} successfully!`,
-          status: 'success'
-        })
-      })
-      .catch(err => {
-        setNotifyMesssage({
-          msg: `The error occure check the please check the console ${err}`,
-          status: 'error',
-        }),
+    const existingPerson = persons.find(person => person.name === newPersonObject.name)
+    if (existingPerson) {
+      if (window.confirm(`${newPersonObject.name} is already added to the phonebok, replace the old number with a new one?`)) {
+        personService.update(existingPerson.id, newPersonObject)
+          .then(updatedPerson => {
+            setPersons(persons.map(person => person.id !== existingPerson.id ? person : updatedPerson))
+            setNotifyMesssage({
+              msg: `Updated ${newPersonObject.name} successfully!`,
+              status: 'success'
+            })
+            setTimeout(() => {
+              setNotifyMesssage(null)
+            }, 5000)
+
+          })
+          .catch(err => {
+            setNotifyMesssage({
+              msg: `The error occurred, please check the console ${err}`,
+              status: 'error',
+            })
+            setTimeout(() => {
+              setNotifyMesssage(null)
+            }, 5000)
+          })
+      }
+    } else {
+      personService.create(newPersonObject)
+        .then(data => {
+          setPersons(persons.concat(data))
+          setNotifyMesssage({
+            msg: `Added ${newPersonObject.name} successfully!`,
+            status: 'success'
+          })
           setTimeout(() => {
             setNotifyMesssage(null)
           }, 5000)
-      })
-      .finally(
-        setNotifyMesssage({
-          msg: `Added ${person.name} successfully!`,
-          status: 'success'
-        }),
-        setTimeout(() => {
-          setNotifyMesssage(null)
-        }, 5000)
-      )
+        })
+        .catch(err => {
+          setNotifyMesssage({
+            msg: `The error occurred, please check the console ${err}`,
+            status: 'error',
+          })
+          setTimeout(() => {
+            setNotifyMesssage(null)
+          }, 5000)
+        })
+    }
     setNewName('')
     setNumber('')
   }
@@ -85,25 +102,23 @@ const App = () => {
       personService.deletePerson(id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== id))
-        })
-        .catch(err => {
-          setNotifyMesssage({
-            msg: `The error occure check the please check the console ${err}`,
-            status: 'error',
-          }),
-            setTimeout(() => {
-              setNotifyMesssage(null)
-            }, 5000)
-        })
-        .finally(
           setNotifyMesssage({
             msg: `Deleted ${person.name} successfully!`,
             status: 'success'
-          }),
+          })
           setTimeout(() => {
             setNotifyMesssage(null)
           }, 5000)
-        )
+        })
+        .catch(err => {
+          setNotifyMesssage({
+            msg: `The error occurred, please check the console ${err}`,
+            status: 'error',
+          })
+          setTimeout(() => {
+            setNotifyMesssage(null)
+          }, 5000)
+        })
     }
   }
 
