@@ -4,7 +4,7 @@ import Persons from './Components/Persons'
 import PersonForm from './Components/PersonForm'
 import personService from './services/person'
 import Notification from './Components/Notification'
-import person from './services/person'
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -72,7 +72,7 @@ const App = () => {
         })
         .catch(err => {
           setNotifyMesssage({
-            msg: `The error occurred, please check the console ${err}`,
+            msg: `The error occurred, please check the console ${err.response.data.err}`,
             status: 'error',
           })
           setTimeout(() => {
