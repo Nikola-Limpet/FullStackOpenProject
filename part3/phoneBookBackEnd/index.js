@@ -2,7 +2,7 @@ require('dotenv').config()
 
 const express = require('express');
 const morgan = require('morgan')
-const cors = require('cors'); 
+const cors = require('cors');
 const app = express();
 
 app.use(express.json())
@@ -18,7 +18,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 const Person = require('./models/person')
 
 app.get('/', (req, res) => {
-  res.send({msg: 'hello guy'})
+  res.send({ msg: 'hello guy' })
 })
 
 // get all persons
@@ -47,7 +47,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 // delete a single phonebook entry
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(err => next(err))
@@ -55,16 +55,17 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
 // update phone number if the user inputs the same name that already exists
 app.put('/api/persons/:id', (req, res, next) => {
-  const body = req.body;
-  if (!body.name || !body.number) {
+  const { name , number }= req.body;
+  if (!name || !number) {
     return res.status(400).json({ error: 'name or number missing' });
   }
-  const person = {
-    name: body.name,
-    number: body.number,
-  };
+  const numberPattern = /^\d{2,3}-\d+$/; //reg exp  of number
+  if (!numberPattern.test(number)) {
+    return res.status(400).json({ error: 'invalid phone number format' });
+  }
 
-  Person.findByIdAndUpdate(req.params.id, person, { new: true, runValidators: true, context: 'query' })
+
+  Person.findByIdAndUpdate(req.params.id, { name, number }, { new: true, runValidators: true, context: 'query' })
     .then(updatedPerson => {
       if (updatedPerson) {
         res.json(updatedPerson);
@@ -75,7 +76,7 @@ app.put('/api/persons/:id', (req, res, next) => {
     .catch(err => next(err));
 })
 
-// add new phone book entries 
+// add new phone book entries
 app.post('/api/persons/', (req, res, next) => {
   const body = req.body;
   if (!(body.name && body.number)) {
@@ -99,6 +100,8 @@ const errorHandler = (err, req, res, next) => {
 
   if (err.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' });
+  } else if (err.nmme === 'ValidatorError') {
+    return res.status(400).json({ error: err.message })
   }
   next(err)
 }
