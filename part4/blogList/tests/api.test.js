@@ -108,7 +108,48 @@ test.only('verify that if the title or url properties are missing from the reque
 
 })
 
+test.only('delete a single note by valid id', async () => {
+  const blogsAtStart = await blogInDB()
+  const blogToDelete = blogsAtStart[0]
 
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await blogInDB()
+  assert.strictEqual(blogsAtEnd.length, initBlog.length - 1)
+
+  const titles = blogsAtEnd.map(blog => blog.title)
+  assert(!titles.includes(blogToDelete.title))
+
+})
+
+test.only('update a individual post', async () => {
+  const blogs = await blogInDB()
+
+  const blogToUpdate = blogs[0]
+
+  const updateBlog = {
+    title: 'This should be the first blog now',
+    author: 'Yuujin',
+    url: 'www.google.com',
+    likes: 999
+  }
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updateBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const updatedBlog = await Blog.findById(blogToUpdate.id)
+  
+  assert.strictEqual(updatedBlog.title, updateBlog.title)
+  assert.strictEqual(updatedBlog.author, updateBlog.author)
+  assert.strictEqual(updatedBlog.url, updateBlog.url)
+  assert.strictEqual(updatedBlog.likes, updateBlog.likes)
+})
+ 
 after(async () => 
   await mongoose.connection.close()
 )
