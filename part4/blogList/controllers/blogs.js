@@ -1,23 +1,31 @@
-const Router = require('express').Router();
+const blogRouter = require('express').Router();
 
 // get blog schema 
 const Blog = require('../models/blog')
 
-Router.get('/', (req, res, next) => {
-  Blog.find({})
-  .then(blog => res.json(blog))
-  .catch(err => next(err))
+blogRouter.get('/', async (req, res, next) => {
+  try {
+    const blog = await Blog.find({})
+    res.json(blog).status(200)
+
+  } catch (exception) {
+    next(exception)
+  }
 })
 
-Router.post('/', (req, res, next) => {
-  const blog = new Blog(req.body)
-  
-  blog.save()
-  .then(result => {
-    res.status(201).json(result)
-  })
-  .catch(err => next(err))
+blogRouter.post('/', async (req, res, next) => {
+  const body = req.body;
+  // if (!body.title || !body.author || !body.url || !body.likes) {
+  //   return res.status(400).json({ error: 'all fields are required' })
+  // }
+  try {
+    const blog = new Blog(body)
+    const savedBlog = await blog.save()
+    res.status(201).json(savedBlog)
+  } catch(err) {
+    next(err)
+  } 
 })
 
 
-module.exports = Router
+module.exports = blogRouter

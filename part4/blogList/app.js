@@ -5,7 +5,7 @@ const cors = require('cors')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
-const blogsRouter = require('./controllers/blogs')
+const blogRouter = require('./controllers/blogs')
 
 mongoose.set('strictQuery', false)
 
@@ -27,10 +27,10 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 
 // Use router
-app.use('/api/blogs', blogsRouter)
+app.use('/api/blogs', blogRouter)
 
 // Custom error middlewares
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
-module.exports = app
+module.exports = app;
