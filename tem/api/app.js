@@ -3,11 +3,12 @@ const express = require('express')
 require('express-async-errors')
 const app = express()
 const cors = require('cors')
-const notesRouter = require('./controllers/notes')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 
+const notesRouter = require('./controllers/notes')
+const usersRouter = require('./controllers/users')
 mongoose.set('strictQuery', false)
 
 logger.info('connecting to', config.MONGO_DB_URI)
@@ -31,6 +32,7 @@ app.use(middleware.requestLogger)
 // get Router Obej of note app contain CRUD
 // can be isolate in its own dir which's Routes
 app.use('/api/notes', notesRouter)
+app.use('/api/users', usersRouter)
 
 // custom error middlewares
 app.use(middleware.unknownEndpoint)
