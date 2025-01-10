@@ -4,7 +4,12 @@ const blogSchema = new mongoose.Schema({
   title: { type: String, required: true },
   author: { type: String, required: true },
   url: { type: String, required: true },
-  likes: { type: Number, default: 0 }
+  likes: { type: Number, default: 0 },
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User'
+  }
+
 })
   // transfrom _id to id and remove __v from db
   blogSchema.set('toJSON', {

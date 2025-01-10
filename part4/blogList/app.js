@@ -1,11 +1,13 @@
 const config = require('./utils/config')
 const express = require('express')
 const app = express()
+require('express-async-errors')
 const cors = require('cors')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 const blogRouter = require('./controllers/blogs')
+const usersRouter = require('./controllers/users')
 
 mongoose.set('strictQuery', false)
 
@@ -28,6 +30,7 @@ app.use(middleware.requestLogger)
 
 // Use router
 app.use('/api/blogs', blogRouter)
+app.use('/api/users', usersRouter)
 
 // Custom error middlewares
 app.use(middleware.unknownEndpoint)
