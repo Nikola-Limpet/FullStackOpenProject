@@ -5,10 +5,12 @@ const userSchema = new mongoose.Schema({
   username: { type: String, minLength: 3, require: true},
   name: String,
   passwordHash: { type: String, require: true },
-  blogs: {
+  blogs: [
+    {
     type: mongoose.Types.ObjectId,
     ref: 'Blog'
-  }
+    }
+  ]
 })
 
 // tranform collect 
