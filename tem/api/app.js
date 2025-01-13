@@ -9,6 +9,7 @@ const mongoose = require('mongoose')
 
 const notesRouter = require('./controllers/notes')
 const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
 mongoose.set('strictQuery', false)
 
 logger.info('connecting to', config.MONGO_DB_URI)
@@ -33,6 +34,7 @@ app.use(middleware.requestLogger)
 // can be isolate in its own dir which's Routes
 app.use('/api/notes', notesRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 // custom error middlewares
 app.use(middleware.unknownEndpoint)

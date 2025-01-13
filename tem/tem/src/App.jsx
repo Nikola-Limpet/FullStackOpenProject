@@ -3,6 +3,9 @@ import Notes from './components/Notes'
 // import axios from 'axios'
 import noteServices from './services/notes'
 import Notification from './components/Notification'
+import loginService from './services/login'
+import LoginForm from './components/LoginForm'
+import NoteForm from './components/NoteForm'
 
 const Footer = () => {
   const footerStyle = {
@@ -24,10 +27,32 @@ const App = () => {
   // console.log(notes)
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMesssage] = useState(null)
-
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
   useEffect(() => {
     noteServices.getAll().then(initialNote => setNotes(initialNote))
   }, [])
+
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    console.log('Login with', username, password)
+
+    try {
+      const user = await loginService.login({ username, password })
+
+      noteServices.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch (exception) {
+      setErrorMesssage('Wrong credentials')
+      setTimeout(() => {
+        setErrorMesssage(null)
+      }, 5000)
+    }
+  }
 
   const noteToShow = showAll ? notes : notes.filter(note => note.important === true)
 
@@ -76,6 +101,32 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
+      {user === null ? (
+        <LoginForm
+          username={username}
+          password={password}
+          handleSubmit={handleLogin}
+          handleChangeUsername={(e) => setUsername(e.target.value)}
+          handleChangePassword={(e) => setPassword(e.target.value)}
+        />
+      ) : (
+        <div>
+          <p> {user.username} Logged-In </p>
+          <NoteForm
+            addNote={addNote}
+            newNote={newNote}
+            handleNoteChange={handleNoteChange}
+          />
+        </div>
+      )}
+      {user !== null && (
+        <div>
+          <button onClick={() => setShowAll(!showAll)}>
+            {showAll ? "show important" : "show all"}
+          </button>
+
+        </div>
+      )}
       <ul>
         {noteToShow.map(note =>
           <Notes
@@ -85,13 +136,6 @@ const App = () => {
           />
         )}
       </ul>
-      <form onSubmit={addNote}>
-        <input value={newNote} onChange={handleNoteChange} />
-        <button type='submit'>Add Note</button>
-      </form>
-      <button onClick={() => setShowAll(!showAll)}>
-        {showAll ? "show important" : "show all"}
-      </button>
       <Footer />
     </div>
   )
