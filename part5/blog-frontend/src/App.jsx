@@ -18,10 +18,23 @@ const App = () => {
     )
   }, [])
 
+  useEffect(() => {
+    const userLoggedJSON = window.localStorage.getItem('loggedToBlogApp')
+    if (userLoggedJSON) {
+      const user = JSON.parse(userLoggedJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
+
       const user = await loginService.login({ username, password })
+
+      window.localStorage.setItem('loggedToBlogApp', JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -43,7 +56,10 @@ const App = () => {
     try {
       const returnedBlog = await blogService.create(newBlog)
       setBlogs(blogs.concat(returnedBlog))
-      setNotification({ message: `A new blog ${newBlog.title} by ${newBlog.author} added`, type: 'success' })
+      setNotification({
+        message: `A new blog ${newBlog.title} by ${newBlog.author} added`,
+        type: 'success'
+      })
       setTimeout(() => setNotification(null), 5000)
     } catch (exception) {
       setNotification({ message: 'Failed to add blog', type: 'error' })
