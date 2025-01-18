@@ -30,17 +30,17 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       {visible ? (
-        <div>
+        <div className="blogDetails">
           {blog.title} <br />
           {blog.url} <br />
           {blog.likes} <button onClick={handleLikeClick}>like</button> <br />
           {blog.author} <br />
         </div>
       ) : (
-        <div>
-          {blog.title}
+        <div className="blogTitle">
+          {blog.title} {blog.author}
         </div>
       )}
       <div>
