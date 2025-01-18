@@ -80,6 +80,18 @@ const App = () => {
     }
   }
 
+  const removeBlog = async (id) => {
+    try {
+      await blogService.remove(id)
+      setBlogs(blogs.filter(blog => blog.id !== id))
+      setNotification({ message: 'Blog removed', type: 'success' })
+      setTimeout(() => setNotification(null), 5000)
+    } catch (exception) {
+      setNotification({ message: 'Failed to remove blog', type: 'error' })
+      setTimeout(() => setNotification(null), 5000)
+    }
+  }
+
   return (
     <div>
       <h2>blogs</h2>
@@ -98,8 +110,8 @@ const App = () => {
           <Togglable buttonLabel="create new blog" ref={blogFormRef}>
             <BlogForm addBlog={addBlog} />
           </Togglable>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+          {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+            <Blog key={blog.id} blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} />
           )}
         </div>
       )}

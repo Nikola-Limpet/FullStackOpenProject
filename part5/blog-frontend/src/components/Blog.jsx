@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import blogService from '../services/blogs'
-const Blog = ({ blog, updateBlog }) => {
 
+const Blog = ({ blog, updateBlog, removeBlog }) => {
   const [visible, setVisible] = useState(false)
   const [likes, setLikes] = useState(blog.likes)
 
@@ -10,11 +10,16 @@ const Blog = ({ blog, updateBlog }) => {
       ...blog,
       likes: likes + 1
     }
-    await blogService.update(blog.id, updatedBlog) // update the blog in the database
-    setLikes(likes + 1) // update the likes in the state of the Blog component
-    updateBlog(blog.id, updatedBlog) // update the blog in the state of the App component
+    await blogService.update(blog.id, updatedBlog)
+    setLikes(likes + 1)
+    updateBlog(blog.id, updatedBlog)
   }
 
+  const handleRemovedBlog = async () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      await removeBlog(blog.id)
+    }
+  }
 
   const blogStyle = {
     paddingTop: 10,
@@ -25,7 +30,6 @@ const Blog = ({ blog, updateBlog }) => {
   }
 
   return (
-
     <div style={blogStyle}>
       {visible ? (
         <div>
@@ -42,9 +46,11 @@ const Blog = ({ blog, updateBlog }) => {
       <div>
         <button onClick={() => setVisible(!visible)}>{visible ? 'hide' : 'view'}</button>
       </div>
-
-
+      <div>
+        <button onClick={handleRemovedBlog}>remove</button>
+      </div>
     </div>
   )
 }
+
 export default Blog
