@@ -6,26 +6,37 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "test": "vitest run",
+    "cypress:open": "cypress open",
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "json-server --port 3001 --watch db.json"
   },
   "dependencies": {
     "axios": "^1.7.9",
+    "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.6.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^3.0.2",
+    "cypress": "^14.0.0",
     "eslint": "^9.15.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
+    "eslint-plugin-vitest-globals": "^1.5.0",
     "globals": "^15.12.0",
+    "jsdom": "^26.0.0",
     "json-server": "^1.0.0-beta.3",
-    "vite": "^6.0.1"
+    "vite": "^6.0.1",
+    "vitest": "^3.0.2"
   }
 }
