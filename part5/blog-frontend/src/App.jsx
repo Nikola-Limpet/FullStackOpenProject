@@ -5,6 +5,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import './index.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
