@@ -1,6 +1,7 @@
 import React from 'react'
 
 const AnecdoteForm = ({ add }) => {
+
   return (
     <>
       <h2>create new</h2>

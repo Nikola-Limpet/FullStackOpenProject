@@ -5,22 +5,31 @@ import AnecdoteList from './components/AnecdoteList'
 import AnecdoteForm from './components/AnecdoteForm'
 import Filter from './components/Filter'
 import Notification from './components/Notification'
-
+import anecdotesService from './services/anecdotes'
+import { useEffect } from 'react'
+import { setAnecdotes } from './reducers/store'
 const App = () => {
   const anecdotes = useSelector(state => state.anecdote)
   const filter = useSelector(state => state.filter)
-  // filter state is '' from start
+
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    anecdotesService.getAll()
+      .then(anecdotes => dispatch(setAnecdotes(anecdotes)))
+  }, [])
 
   const vote = (id) => {
     dispatch(voteFor(id))
     const votedAnecdote = anecdotes.find(a => a.id === id)
     dispatch(setNotificationWithTimeout(`You voted for '${votedAnecdote.content}`, 5000))
   }
-  const add = (e) => {
+
+  const add = async (e) => {
     e.preventDefault()
     const newAnecdote = e.target.anecdote.value
-    dispatch(addNew(newAnecdote))
+    const newAnecdooteBack = await anecdotesService.createNew(newAnecdote)
+    dispatch(addNew(newAnecdooteBack))
     e.target.anecdote.value = ''
     dispatch(setNotificationWithTimeout(`You created an anecdote '${newAnecdote}'`, 5000))
   }

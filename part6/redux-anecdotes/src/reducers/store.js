@@ -38,11 +38,10 @@ const anecdoteSlice = createSlice({
         )
       },
       addNew(state, action) {
-        state.push({
-          content: action.payload,
-          id: getId(),
-          votes: 0
-        })
+        state.push(action.payload)
+      },
+      setAnecdotes(state, action) {
+        return action.payload
       }
     }
   })
@@ -57,7 +56,7 @@ const filterSlice = createSlice({
 })
 
 
-export const { voteFor, addNew } = anecdoteSlice.actions
+export const { voteFor, addNew, setAnecdotes } = anecdoteSlice.actions
 export const anecdoteReducer = anecdoteSlice.reducer
 
 export const { searchValue } = filterSlice.actions
