@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux"
-import { searchValue } from "../reducers/filter"
+import { searchValue } from "../reducers/store"
+
 
 const Filter = () => {
   const dispatch = useDispatch()
