@@ -1,10 +1,13 @@
-
-import React from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createAnecdote } from '../requests'
+import { useContext } from 'react'
+import { NotifyContext } from '../notifyContext'
 
 
 const AnecdoteForm = () => {
+
+  const [message, dispatch] = useContext(NotifyContext)
+
   const queryClient = useQueryClient()
 
   const newAnecdoteMutation = useMutation({
@@ -12,6 +15,10 @@ const AnecdoteForm = () => {
     onSuccess: (newAnecdote) => {
       const anecdotes = queryClient.getQueryData(['anecdotes'])
       queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
+      dispatch('CREATE', `Anecdote created: ${newAnecdote.content}`)
+    },
+    onError: (error) => {
+      dispatch('ERROR', `An error occurred: ${error}`)
     }
   })
 
@@ -19,11 +26,13 @@ const AnecdoteForm = () => {
     event.preventDefault()
     const content = event.target.anecdote.value
     if (content === '' || content.length < 5) {
-      return alert('Anecdote content is required and should be at least 5 characters long')
+      dispatch('SHORT', 'Anecdote content must be at least 5 character or more')
+      return
     }
     newAnecdoteMutation.mutate({ content, votes: 0 })
     event.target.anecdote.value = ''
   }
+
 
   return (
     <div>
