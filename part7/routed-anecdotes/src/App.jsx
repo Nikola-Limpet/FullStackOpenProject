@@ -5,6 +5,7 @@ import {
   Routes, Route, Link,
   useNavigate, useMatch
 } from 'react-router-dom'
+import { useField } from './hooks'
 
 
 const Menu = () => {
@@ -21,7 +22,7 @@ const Menu = () => {
 }
 
 const AnecdoteList = ({ anecdotes }) => (
-  <div>
+  < div >
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map(anecdote =>
@@ -30,7 +31,7 @@ const AnecdoteList = ({ anecdotes }) => (
         </li>
       )}
     </ul>
-  </div>
+  </div >
 )
 
 const Anecdote = ({ anecdote }) => {
@@ -75,47 +76,58 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
   const navigate = useNavigate()
-
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     navigate('/')
   }
 
+  const handleRest = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
+  // remove reset from custom hook
+  const contentInput = { type: content.type, value: content.value, onChange: content.onChange }
+  const authorInput = { type: author.type, value: author.value, onChange: author.onChange }
+  const infoInput = { type: info.type, value: info.value, onChange: info.onChange }
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...contentInput} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...authorInput} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input {...infoInput} />
         </div>
+
         <button>create</button>
+        <button type="button" onClick={handleRest}>reset</button>
       </form>
     </div>
   )
-
 }
 
 const App = () => {
+  const [notification, setNotification] = useState('')
   const [anecdotes, setAnecdotes] = useState([
     {
       content: 'If it hurts, do it more often',
@@ -133,7 +145,6 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
