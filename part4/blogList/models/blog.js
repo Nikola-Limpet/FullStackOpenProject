@@ -8,7 +8,12 @@ const blogSchema = new mongoose.Schema({
   user: {
     type: mongoose.Types.ObjectId,
     ref: 'User'
-  }
+  },
+  comments: [
+    {
+      type: String
+    }
+  ]
 
 })
   // transfrom _id to id and remove __v from db

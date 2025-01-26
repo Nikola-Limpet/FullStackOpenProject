@@ -15,6 +15,40 @@ blogRouter.get('/', async (req, res, next) => {
   }
 })
 
+blogRouter.get('/:id', async (req, res, next) => {
+  const id = req.params.id
+  try {
+    const blog = await Blog.findById(id).populate('user', { username: 1, name: 1 })
+    if (!blog) {
+      return res.status(404).json({ error: 'blog not found' })
+    }
+    res.json(blog).status(200)
+  } catch (err) {
+    next(err)
+  }
+})
+
+
+blogRouter.post('/:id/comments', async (req, res, next) => {
+  const { id } = req.params
+  const { comment } = req.body
+
+  try {
+    const blog = await Blog.findById(id)
+    if (!blog) {
+      return res.status(404).json({ error: 'Blog not found' })
+    }
+
+    blog.comments = blog.comments.concat(comment)
+    const updatedBlog = await blog.save()
+
+    res.status(200).json(updatedBlog)
+  } catch (err) {
+    next(err)
+  }
+})
+
+
 blogRouter.post('/', async (req, res, next) => {
   const body = req.body
   
