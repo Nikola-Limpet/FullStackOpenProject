@@ -1,9 +1,15 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
+import { Link } from 'react-router-dom'
+
 const Blog = ({ blog, updateBlog, removeBlog, user }) => {
   const [visible, setVisible] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
+  const [likes, setLikes] = useState(blog ? blog.likes : 0)
+
+  if (!blog) {
+    return null
+  }
 
   const handleLikeClick = async () => {
     const updatedBlog = {
@@ -31,21 +37,12 @@ const Blog = ({ blog, updateBlog, removeBlog, user }) => {
 
   return (
     <div style={blogStyle} className="blog">
-      {visible ? (
-        <div className="blogDetails">
-          {blog.title} <br />
-          {blog.url} <br />
-          likes {likes} <button className="like-button" onClick={handleLikeClick}>like</button> <br />
-          {blog.author} <br />
-          <button onClick={handleRemovedBlog}>remove</button>
-        </div>
-      ) : (
-        <div className="blogTitle">
-          {blog.title} {blog.author}
-        </div>
-      )}
+      <div className="blogTitle">
+        <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
+      </div>
       <div>
-        <button onClick={() => setVisible(!visible)}>{visible ? 'hide' : 'view'}</button>
+        likes {likes} <button className="like-button" onClick={handleLikeClick}>like</button> <br />
+        <button onClick={handleRemovedBlog}>remove</button>
       </div>
     </div>
   )
