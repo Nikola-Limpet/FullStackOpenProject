@@ -16,8 +16,10 @@ jobs:
 
       - name: Install Dependencies 
         run: npm install 
+        working-directory: ./part11/full-stack-open-pokedex-main
 
       - name: Check Style 
         run: npm run eslint 
+        working-directory: ./part11/full-stack-open-pokedex-main
         
 
