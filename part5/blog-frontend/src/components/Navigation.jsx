@@ -11,8 +11,14 @@ const Navigation = ({ user, handleLogout }) => {
     <NavBar>
       <Link to="/">blogs</Link> |
       <Link to="/users">users</Link> |
-      {user.name} logged in
-      <button onClick={handleLogout}>logout</button>
+      {user ? (
+        <>
+          {user.name} logged in
+          <button onClick={handleLogout}>logout</button>
+        </>
+      ) : (
+        <Link to="/login">login</Link>
+      )}
     </NavBar>
   )
 }
