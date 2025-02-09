@@ -11,12 +11,9 @@ const multiplicator = (a: number, b: number, op: Operation): Result => {
 }
 
 
-multiplicator(1,2, 'divide')
+multiplicator(1, 2, 'divide')
 
 type Operation = 'multiply' | 'add' | 'divide';
 
 type Result = string | number;
 
-// const calculator = (a: number, b: number, op: Operation) : Result => {
-
-// }
