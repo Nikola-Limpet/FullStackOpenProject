@@ -2,7 +2,7 @@
 
 type Result = string
 
-function calculatorBmi(w: number, h: number): Result {
+export function calculatorBmi(w: number, h: number): Result {
   const bmiVal = w / ((h / 100) ** 2)
 
   switch (true) {
@@ -20,4 +20,4 @@ function calculatorBmi(w: number, h: number): Result {
 }
 
 
-console.log(calculatorBmi(Number(process.argv[2]), Number(process.argv[3])))
+// console.log(calculatorBmi(Number(process.argv[2]), Number(process.argv[3])))

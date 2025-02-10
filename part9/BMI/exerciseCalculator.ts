@@ -8,7 +8,7 @@ interface Results {
   average: number;
 }
 
-function calculateExercises(data: number[], target: number): Results {
+function calculateExercises(target: number, data: number[]): Results {
   const periodLength = data.length;
   const trainingDays = data.filter(day => day > 0).length;
   const average = data.reduce((a, b) => a + b, 0) / periodLength;
@@ -46,9 +46,9 @@ if (process.argv.length < 4) {
 const target = Number(process.argv[2]);
 const data = process.argv.slice(3).map(Number);
 
-if (isNaN(target) || data.some(isNaN)) {
-  console.log('All inputs should be numbers');
+import { isNotNumber } from "./utils";
+if (isNotNumber(target) || isNotNumber(data)) {
+  console.log('input should be number  ')
   process.exit(1);
 }
-
-console.log(calculateExercises(data, target));
+console.log(calculateExercises(target, data));  
