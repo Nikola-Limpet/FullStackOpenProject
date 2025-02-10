@@ -1,18 +1,18 @@
-// formular weight (kg) / height^2 in m
+// formula weight (kg) / height^2 in m
 
 type Result = string
 
-function calcualtorBmi(w: number, h: number): Result {
-  const bmitVal = w / ((h / 100) * 2)
+function calculatorBmi(w: number, h: number): Result {
+  const bmiVal = w / ((h / 100) ** 2)
 
   switch (true) {
-    case bmitVal <= 18.4:
+    case bmiVal <= 18.4:
       return 'Underweight';
-    case bmitVal >= 18.5 && bmitVal <= 24.9:
+    case bmiVal >= 18.5 && bmiVal <= 24.9:
       return 'Normal';
-    case bmitVal >= 25.0 && bmitVal <= 39.9:
+    case bmiVal >= 25.0 && bmiVal <= 39.9:
       return 'Overweight';
-    case bmitVal >= 40.0:
+    case bmiVal >= 40.0:
       return 'Obese';
     default:
       return 'Invalid BMI';
@@ -20,4 +20,4 @@ function calcualtorBmi(w: number, h: number): Result {
 }
 
 
-console.log(calcualtorBmi(180, 74))
+console.log(calculatorBmi(Number(process.argv[2]), Number(process.argv[3])))

@@ -8,11 +8,10 @@ interface Results {
   average: number;
 }
 
-function caculatorExercises(data: number[], target: number): Results {
+function calculateExercises(data: number[], target: number): Results {
   const periodLength = data.length;
-  const trainingDays = data.filter(d => d !== 0).length;
-  const totalHours = data.reduce((sum, d) => sum + d, 0);
-  const average = totalHours / periodLength;
+  const trainingDays = data.filter(day => day > 0).length;
+  const average = data.reduce((a, b) => a + b, 0) / periodLength;
   const success = average >= target;
 
   let rating: number;
@@ -20,15 +19,14 @@ function caculatorExercises(data: number[], target: number): Results {
 
   if (average >= target) {
     rating = 3;
-    ratingDescription = 'Great job, you met your target!';
+    ratingDescription = 'great job';
   } else if (average >= target * 0.75) {
     rating = 2;
-    ratingDescription = 'Not too bad but could be better';
+    ratingDescription = 'not too bad but could be better';
   } else {
     rating = 1;
-    ratingDescription = 'You need to work harder';
+    ratingDescription = 'you need to work harder';
   }
-
   return {
     periodLength,
     trainingDays,
@@ -39,3 +37,18 @@ function caculatorExercises(data: number[], target: number): Results {
     average
   };
 }
+
+if (process.argv.length < 4) {
+  console.log('Please provide the target and at least one day of exercise data');
+  process.exit(1);
+}
+
+const target = Number(process.argv[2]);
+const data = process.argv.slice(3).map(Number);
+
+if (isNaN(target) || data.some(isNaN)) {
+  console.log('All inputs should be numbers');
+  process.exit(1);
+}
+
+console.log(calculateExercises(data, target));
