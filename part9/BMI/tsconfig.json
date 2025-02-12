@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2022",
+    "module": "commonjs",
     "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./", // Change this to the root directory of your TypeScript files
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
@@ -9,5 +14,7 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "moduleResolution": "node"
-  }
+  },
+  "include": ["./**/*.ts"], // Include all TypeScript files in the project
+  "exclude": ["node_modules"]
 }

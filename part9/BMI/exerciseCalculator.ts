@@ -1,4 +1,4 @@
-interface Results {
+export interface Results {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -8,7 +8,7 @@ interface Results {
   average: number;
 }
 
-function calculateExercises(target: number, data: number[]): Results {
+export function calculateExercises(target: number, data: number[]): Results {
   const periodLength = data.length;
   const trainingDays = data.filter(day => day > 0).length;
   const average = data.reduce((a, b) => a + b, 0) / periodLength;
