@@ -1,22 +1,27 @@
 
 
 export interface Diagnoses {
-  code: String;
-  name: String;
-  latin?: String;
+  code: string;
+  name: string;
+  latin?: string;
 }
 ;
 export type DiagnosesNoLatin = Pick<Diagnoses, 'code' | 'name'>;
 
 export interface PatientsAllField {
-  id: String;
-  name: String;
-  dateOfBirth: String;
-  ssn?: String;
+  id: string;
+  name: string;
+  dateOfBirth: string;
+  ssn?: string;
   gender: Gender;
-  occupation: String;
+  occupation: string;
 }
 
 export type Patients = Exclude<PatientsAllField, 'ssn'>;
 
-export type Gender = 'male' | 'female' | 'other';
+export type NewPatients = Omit<PatientsAllField, 'id'>;
+export enum Gender {
+  Male = 'male',
+  Female = 'female',
+  Other = 'other',
+}
