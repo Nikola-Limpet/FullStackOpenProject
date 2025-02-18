@@ -1,7 +1,8 @@
 import express, { Response } from 'express';
 import patientsService from '../services/patientsService';
 import { Patients } from '../types';
-import toNewPatient from '../utils/toNewPatient';
+import { newDiaryParser } from '../middlewares/newPatientParser';
+
 
 const router = express.Router();
 
@@ -10,11 +11,9 @@ router.get('/', (_req, res: Response<Patients[]>) => {
   res.json(patientsService.getAllPatients())
 })
 
-router.post('/', (req, res) => {
+router.post('/', newDiaryParser, (req, res) => {
   try {
-    const newPatient = toNewPatient(req.body);
-
-    const addedPatient = patientsService.addPatient(newPatient)
+    const addedPatient = patientsService.addPatient(req.body)
     res.json(addedPatient);
 
   } catch (e: unknown) {
